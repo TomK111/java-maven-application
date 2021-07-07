@@ -2,6 +2,9 @@ def gv
 
 pipeline {
     agent any
+    tools {
+        maven 'maven-3.8'
+    }
     stages {
         stage("init") {
             steps {
@@ -13,26 +16,25 @@ pipeline {
         stage("build jar") {
             steps {
                 script {
-                    echo "building jar"
                     gv.buildJar()
                 }
             }
         }
+
         stage("build docker image") {
             steps {
                 script {
-                    echo "building docker image"
                     gv.buildDockerImage()
                 }
             }
         }
+
         stage("deploy") {
             steps {
                 script {
-                    echo "deploying"
-                    gv.deployApp()
-                }
+                    gv.deployDockerImage()
+                }   
             }
         }
-    }   
+    }
 }
