@@ -1,57 +1,38 @@
-def gv
-
 pipeline {
     agent any
-    parameters {
-        choice(name: 'VERSION', choices: ['1.1', '1.2', '1.3'], description: '')
-        booleanParam(name: 'executeTests', defaultValue: true, description: '' )
+    tools {
+        maven 'maven-3.8'
     }
     stages {
-        stage("init") {
+        stage("build jar") {
             steps {
                 script {
-                    gv = load "script.groovy"
-                }
-            }
-
-        }
-
-        stage("build") {
-            steps {
-                script {
-                    gv.buildApp()
+                    echo "building the application..."
+                    sh 'mvn package'
                 }
             }
         }
 
-        stage("test") {
-            when {
-                expression {
-                    params.executeTests == true
-                }
-            }
+        stage("build docker image") {
             steps {
                 script {
-                    gv.testApp()
+                    echo "building the docker image..."
+                    withCredentials([usernamePassword:(
+                    credentialsId:'nexus-credentials',
+                    passwordVariable:'PASS',
+                    usernameVariable: 'USER')]) {
+                        sh 'docker build -t 134.122.20.106:8083/java-maven-app:1.4 .'
+                        sh "echo $PASS | docker login -u $USER --password-stdin 134.122.20.106:8083"
+                        sh 'docker push 134.122.20.106:8083/java-maven-app:1.4'
+                    }
                 }
             }
         }
 
         stage("deploy") {
-            input {
-                message "Select the environment to deploy to"
-                ok "Done"
-                parameters {
-                    choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: '')
-                }
-            }
             steps {
-                script {
-                    gv.deployApp()
-                    echo "deploying to ${ENV}"
-                }
+                echo "deploying application..."
             }
         }
     }
 }
-
