@@ -14,15 +14,15 @@ pipeline {
             steps {
                 script {
                     echo "building jar"
-                    //gv.buildJar()
+                    gv.buildJar()
                 }
             }
         }
-        stage("build image") {
+        stage("build docker image") {
             steps {
                 script {
-                    echo "building image"
-                    //gv.buildImage()
+                    echo "building docker image"
+                    gv.buildDockerImage()
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     echo "deploying"
-                    //gv.deployApp()
+                    gv.deployApp()
                 }
             }
         }
