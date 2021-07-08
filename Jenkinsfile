@@ -21,7 +21,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "testing application."
+                    gv.testApp()
                 }
             }
         }
@@ -51,6 +51,19 @@ pipeline {
             }
         }
 
+        stage ("login to Nexus") {
+            when {
+                expression {
+                    BRANCH_NAME == "main"
+                }
+            }
+            steps {
+                script {
+                    gv.loginToNexus()
+                }
+            }
+        }
+
         stage("deploy") {
             when {
                 expression {
@@ -65,4 +78,3 @@ pipeline {
         }
     }
 }
-
