@@ -16,7 +16,7 @@ pipeline {
         stage("test") {
             when {
                 expression {
-                    BRANCH_NAME != "main"
+                    BRANCH_NAME == "main" || BRANCH_NAME == "jenkins-job"
                 }
             }
             steps {
