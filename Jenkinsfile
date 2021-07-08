@@ -13,7 +13,24 @@ pipeline {
                 }
             }
         }
+        stage("test") {
+            when {
+                expression {
+                    BRANCH_NAME == "jenkins-job"
+                }
+            }
+            steps {
+                script {
+                    echo "testing application."
+                }
+            }
+        }
         stage("build jar") {
+            when {
+                expression {
+                    BRANCH_NAME == "main"
+                }
+            }
             steps {
                 script {
                     gv.buildJar()
@@ -22,6 +39,11 @@ pipeline {
         }
 
         stage("build docker image") {
+            when {
+                expression {
+                    BRANCH_NAME == "main"
+                }
+            }
             steps {
                 script {
                     gv.buildDockerImage()
@@ -30,6 +52,11 @@ pipeline {
         }
 
         stage("deploy") {
+            when {
+                expression {
+                    BRANCH_NAME == "main"
+                }
+            }
             steps {
                 script {
                     gv.deployDockerImage()
