@@ -21,7 +21,8 @@ pipeline {
             }
             steps {
                 script {
-                    echo "testing application."
+                    echo "testing application..."
+                    gv.testApp()
                 }
             }
         }
