@@ -21,7 +21,6 @@ pipeline {
             }
             steps {
                 script {
-                    echo "testing application..."
                     gv.testApp()
                 }
             }
@@ -48,6 +47,19 @@ pipeline {
             steps {
                 script {
                     gv.buildDockerImage()
+                }
+            }
+        }
+
+        stage ("login to Nexus") {
+            when {
+                expression {
+                    BRANCH_NAME == "main"
+                }
+            }
+            steps {
+                script {
+                    gv.loginToNexus()
                 }
             }
         }
