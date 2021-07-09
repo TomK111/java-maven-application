@@ -38,14 +38,6 @@ pipeline {
             }
         }
 
-        stage ("login to Nexus") {
-            steps {
-                script {
-                    loginToNexus()
-                }
-            }
-        }
-
         stage("deploy") {
             steps {
                 script {
