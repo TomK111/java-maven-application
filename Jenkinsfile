@@ -1,3 +1,5 @@
+@Library("jenkins-shared-library")
+
 def gv
 
 pipeline {
@@ -14,11 +16,6 @@ pipeline {
             }
         }
         stage("test") {
-            when {
-                expression {
-                    BRANCH_NAME == "main" || BRANCH_NAME == "jenkins-job"
-                }
-            }
             steps {
                 script {
                     gv.testApp()
@@ -26,53 +23,33 @@ pipeline {
             }
         }
         stage("build jar") {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
             steps {
                 script {
-                    gv.buildJar()
+                    buildJar()
                 }
             }
         }
 
         stage("build docker image") {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
             steps {
                 script {
-                    gv.buildDockerImage()
+                    buildDockerImage()
                 }
             }
         }
 
         stage ("login to Nexus") {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
             steps {
                 script {
-                    gv.loginToNexus()
+                    loginToNexus()
                 }
             }
         }
 
         stage("deploy") {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
             steps {
                 script {
-                    gv.deployDockerImage()
+                    deployDockerImage()
                 }   
             }
         }
