@@ -18,7 +18,7 @@ pipeline {
         stage("test") {
             steps {
                 script {
-                    gv.testApp()
+                    testApp()
                 }
             }
         }
@@ -34,6 +34,14 @@ pipeline {
             steps {
                 script {
                     buildDockerImage()
+                }
+            }
+        }
+
+        stage("login to Nexus") {
+            steps {
+                script {
+                    loginToNexus()
                 }
             }
         }
