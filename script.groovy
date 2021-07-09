@@ -10,28 +10,17 @@ def testApp() {
 
 def buildDockerImage() {
     echo "building the docker image..."
-    withCredentials([usernamePassword(credentialsId:'nexus-credentials', passwordVariable:'PASS',
+    withCredentials([usernamePassword(credentialsId:'docker-hub-credentials', passwordVariable:'PASS',
             usernameVariable: 'USER')]) {
-        sh 'docker build -t 134.122.20.106:8083/java-maven-app:1.4 .'
-        sh "echo $PASS | docker login -u $USER --password-stdin 134.122.20.106:8083"
-        sh 'docker push 134.122.20.106:8083/java-maven-app:1.4'
-    }
-}
-
-def loginToNexus() {
-    echo "Logging into Nexus OSS..."
-    withCredentials([usernamePassword(credentialsId:'nexus-credentials', passwordVariable:'PASS',
-            usernameVariable: 'USER')]) {
-        sh "echo $PASS | docker login -u $USER --password-stdin 134.122.20.106:8083"
+        sh 'docker build -t kraljict/java-maven-app:1.5 .'
+        sh "echo $PASS | docker login -u $USER --password-stdin"
+        sh 'docker push kraljict/java-maven-app:1.5'
     }
 }
 
 def deployDockerImage() {
     echo 'deploying the application...'
-    withCredentials([usernamePassword(credentialsId:'nexus-credentials', passwordVariable:'PASS',
-            usernameVariable: 'USER')]) {
-        sh 'docker push 134.122.20.106:8083/java-maven-app:1.4'
-    }
 }
 
 return this
+
