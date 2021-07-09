@@ -10,7 +10,7 @@ def testApp() {
 
 def buildDockerImage() {
     echo "building the docker image..."
-    withCredentials([usernamePassword(credentialsId:'nexus-credentials', passwordVariable:'PASS',
+    withCredentials([usernamePassword(credentialsId:'docker-hub-credentials', passwordVariable:'PASS',
             usernameVariable: 'USER')]) {
         sh 'docker build -t kraljict/java-maven-app:1.5 .'
         sh "echo $PASS | docker login -u $USER --password-stdin"
